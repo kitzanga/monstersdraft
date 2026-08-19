@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase, supabaseConfigured } from '../lib/supabase'
 import type { TeamName } from '../constants'
 import type { CandidateDate, Vote } from '../types'
 import type { RealtimeChannel } from '@supabase/supabase-js'
@@ -30,6 +30,12 @@ export function useBoard(): BoardData & BoardActions {
   // Initial data fetch
   useEffect(() => {
     async function fetchAll() {
+      if (!supabaseConfigured) {
+        setError('Supabase is not configured. Check environment variables.')
+        setLoading(false)
+        return
+      }
+
       setLoading(true)
       setError(null)
 
